@@ -1,10 +1,7 @@
 {
   "name": "isw-snackbar",
   "description": "Material Design Polymer 2.0 Snackbar / Toast, stacking context safe with remote-control.",
-  "main": [
-    "isw-snackbar.html",
-    "isw-snackbar-remote.html"
-  ],
+  "main": "isw-snackbar.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^2.0.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
