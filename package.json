@@ -1,0 +1,26 @@
+{
+  "description": "Material Design Polymer 2.0 Snackbar / Toast, stacking context safe with remote-control.",
+  "name": "@mkazlauskas/isw-snackbar",
+  "version": "2.5.0",
+  "main": "isw-snackbar.js",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "test": "polymer test --npm",
+    "start": "polymer serve --npm"
+  },
+  "dependencies": {
+    "@polymer/polymer": "^3.0.0",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.18",
+    "@polymer/iron-overlay-behavior": "^3.0.0-pre.18"
+  },
+  "devDependencies": {
+    "@polymer/iron-demo-helpers": "^3.0.0-pre.18",
+    "wct-browser-legacy": "^1.0.1",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "@polymer/app-layout": "^3.0.0-pre.18",
+    "@polymer/paper-button": "^3.0.0-pre.18",
+    "@polymer/paper-icon-button": "^3.0.0-pre.18",
+    "@polymer/iron-icons": "^3.0.0-pre.18",
+    "@polymer/iron-flex-layout": "^3.0.0-pre.18"
+  }
+}

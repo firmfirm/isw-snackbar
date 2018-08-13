@@ -1,11 +1,4 @@
-<link rel="import" href="../polymer/polymer.html">
-
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../iron-overlay-behavior/iron-overlay-behavior.html">
-
-<link rel="import" href="./isw-snackbar-css-properties-mixin.html">
-
-<!--
+/**
 `isw-snackbar`
 Material Design Polymer 2.0 Snackbar / Toast, stacking context safe with remote-control.
 
@@ -40,11 +33,22 @@ It can be accessed from multiple remotes.
     }
 
 @demo demo/index.html
--->
+*/
+import '@polymer/polymer/polymer-legacy.js';
 
-<dom-module id="isw-snackbar">
-	<template>
-		<style>
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import { IronOverlayBehavior } from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
+import { IswSnackbarCssPropertiesMixin } from './isw-snackbar-css-properties-mixin.js';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+class IswSnackbar extends mixinBehaviors( [ IronOverlayBehavior ], IswSnackbarCssPropertiesMixin(PolymerElement) ) {
+    static get is() {
+				return 'isw-snackbar';
+    }
+    
+    static get template() {
+        return html`
+        <style>
 			:host {
 				position: absolute;
 				display: block !important;
@@ -58,7 +62,6 @@ It can be accessed from multiple remotes.
 				--isw-snackbar-background: var(--dark-theme-background-color, #323232);
 				--isw-snackbar-action-color: var(--isw-snackbar-text-color);
 			}
-
 			#snackbar {
 				@apply --layout-horizontal;
 				@apply --layout-center;
@@ -76,36 +79,30 @@ It can be accessed from multiple remotes.
 				animation-duration: 0.2s;
 				@apply --snackbar-container;
 			}
-
 			@keyframes close {
 				from { bottom: 0px; }
 				to { bottom: var(--snackbar-hidden-bottom); }
 			}
-
 			:host([opened]) #snackbar {
 				bottom: 0px;
 				animation-name: open;
 				animation-duration: 0.2s;
 			}
-
 			@keyframes open {
 				from { bottom: var(--snackbar-hidden-bottom); }
 				to { bottom: 0px; }
 			}
-
 			:host([device="tablet"]),
 			:host([device="desktop"]) {
 				width: var(--snackbar-width);
 				white-space: nowrap;
 			}
-
 			:host([device="tablet"]) #snackbar,
 			:host([device="desktop"]) #snackbar {
 				max-width: 568px;
 				min-width: 288px;
 				border-radius: 2px;
 			}
-
 			#message {
 				margin: 0 24px;
 				font-size: 14px;
@@ -119,7 +116,6 @@ It can be accessed from multiple remotes.
 			#message > span {
 				@apply --snackbar-message-container-inner;
 			}
-
 			paper-button {
 				margin-right: 0;
 				color: var(--isw-snackbar-action-color);
@@ -135,58 +131,53 @@ It can be accessed from multiple remotes.
 					</template>
 				</dom-if>
 			</div>
-		</div>
-	</template>
+</div>
+        `;
+    }
 
-	<script>
-		class IswSnackbar extends Polymer.mixinBehaviors( [ Polymer.IronOverlayBehavior ], IswSnackbarCssPropertiesMixin(Polymer.Element) ) {
-			static get is() {
-				return 'isw-snackbar';
-			}
-
-			static get properties() {
+    static get properties() {
 				return {
-					message: {
-						type: String,
-						notify: true
-					},
-					duration: {
-						type: Number,
-						notify: true
-					},
-					action: Object,
-					queue: {
-						type: Array,
-						value: []
-					},
-					/**
-					 * Override opened from iron-overlay-behavior to add reflectToAttribute for styling.
-					 */
-					opened: {
-						type: Boolean,
-						notify: true,
-						reflectToAttribute: true,
-						value: false
-					},
-					/**
-					 * The device metrics that should be used. Either "mobile", "tablet" or "desktop".
-					 * Combine with isw-responsive-behavior for a responsive snackbar.
-					 */
-					device: {
-						type: String,
-						notify: true,
-						reflectToAttribute: true,
-						value: 'mobile'
-					},
-					_running: {
-						type: Boolean,
-						value: false
-					},
-					_activeSnackId: Number,
+            message: {
+                type: String,
+                notify: true
+            },
+            duration: {
+                type: Number,
+                notify: true
+            },
+            action: Object,
+            queue: {
+                type: Array,
+                value: []
+            },
+            /**
+             * Override opened from iron-overlay-behavior to add reflectToAttribute for styling.
+             */
+            opened: {
+                type: Boolean,
+                notify: true,
+                reflectToAttribute: true,
+                value: false
+            },
+            /**
+             * The device metrics that should be used. Either "mobile", "tablet" or "desktop".
+             * Combine with isw-responsive-behavior for a responsive snackbar.
+             */
+            device: {
+                type: String,
+                notify: true,
+                reflectToAttribute: true,
+                value: 'mobile'
+            },
+            _running: {
+                type: Boolean,
+                value: false
+            },
+            _activeSnackId: Number,
 				};
-			}
+    }
 
-			ready() {
+    ready() {
 				super.ready();
 
 				this.noCancelOnOutsideClick = true;
@@ -194,122 +185,122 @@ It can be accessed from multiple remotes.
 				// Listen to remote 'isw-snackbar-action' events.
 				document.addEventListener( 'isw-snackbar-open', e => this._remoteOpen( e ) );
 				document.addEventListener( 'isw-snackbar-close', ({detail}) => {
-					const id = detail.id;
-					if (this._activeSnackId === id) {
-						this.queueClose();
-					} else {
-						const idx = this.queue.findIndex(snack => snack.id === id);
-						if (idx >= 0) {
-							this.splice( 'queue', idx, 1 );
-						}
-					}
+            const id = detail.id;
+            if (this._activeSnackId === id) {
+                this.queueClose();
+            } else {
+                const idx = this.queue.findIndex(snack => snack.id === id);
+                if (idx >= 0) {
+                    this.splice( 'queue', idx, 1 );
+                }
+            }
 				});
-			}
+    }
 
-			queueClose() {
+    queueClose() {
 				if( this._waitingAsync !== null ) {
-					this.cancelAsync( this._waitingAsync );
-					this._waitingAsync = null;
-					this._queueClose();
+            this.cancelAsync( this._waitingAsync );
+            this._waitingAsync = null;
+            this._queueClose();
 				}
-			}
+    }
 
-			_remoteOpen( event ) {
+    _remoteOpen( event ) {
 				// Add new message from remote to queue.
 				this.push( 'queue', event.detail );
 
 				if( !this._running ) {
-					this.set( '_running', true );
-					this._queueOpen();
+            this.set( '_running', true );
+            this._queueOpen();
 				} else {
-					this.queueClose();
+            this.queueClose();
 				}
-			}
+    }
 
 
-			/**
-			 * Open next message from queue.
-			 */
-			_queueOpen() {
+    /**
+     * Open next message from queue.
+     */
+    _queueOpen() {
 				const detail = this.shift( 'queue' );
 
 				// Set message, action and duration
 				this.setProperties({
-					message: detail.message,
-					duration: detail.duration,
-					action: detail.action,
-					_activeSnackId: detail.id,
+            message: detail.message,
+            duration: detail.duration,
+            action: detail.action,
+            _activeSnackId: detail.id,
 				});
 
 				// Update styles.
 				if (this._originalProperties) {
-					// New snackbar may have some the properties missing,
-					// so we revert to original values
-					this.updateStyles(this._originalProperties);
+            // New snackbar may have some the properties missing,
+            // so we revert to original values
+            this.updateStyles(this._originalProperties);
 				}
 				this._originalProperties = this.getSnackbarCssProperties();
 				this.updateStyles(detail.cssProperties);
 
 				// Make sure DOM is already updated
 				this.async(function() {
-					this.updateStyles( { '--snackbar-hidden-bottom': '-' + this.$.snackbar.offsetHeight + 'px' } );
-					this.updateStyles( { '--snackbar-height': this.$.snackbar.offsetHeight + 'px' } );
-					this.updateStyles( { '--snackbar-width': this.$.snackbar.offsetWidth + 'px' } );
+            this.updateStyles( { '--snackbar-hidden-bottom': '-' + this.$.snackbar.offsetHeight + 'px' } );
+            this.updateStyles( { '--snackbar-height': this.$.snackbar.offsetHeight + 'px' } );
+            this.updateStyles( { '--snackbar-width': this.$.snackbar.offsetWidth + 'px' } );
 
-					// Open the overlay.
-					this.open();
+            // Open the overlay.
+            this.open();
 
-					// Wait for openening animation.
-					this._openingAsync = this.async( this._queueOpened, 200 );
+            // Wait for openening animation.
+            this._openingAsync = this.async( this._queueOpened, 200 );
 				});
-			}
+    }
 
-			/**
-			 * Message opening finished.
-			 */
-			_queueOpened() {
+    /**
+     * Message opening finished.
+     */
+    _queueOpened() {
 
 				// Start waiting.
 				this._queueWait();
-			}
+    }
 
 
-			/**
-			 * Start waiting.
-			 */
-			_queueWait() {
+    /**
+     * Start waiting.
+     */
+    _queueWait() {
 				if( this.queue.length != 0 ) {
-					// If queue is full, hurry up.
-					this._shortWaitingAsync = this.async( this._queueWaited, 600 );
+            // If queue is full, hurry up.
+            this._shortWaitingAsync = this.async( this._queueWaited, 600 );
 				} else {
-					// Last message in queue, normal view time.
-					this._waitingAsync = this.async( this._queueWaited, this.duration );
+            // Last message in queue, normal view time.
+            this._waitingAsync = this.async( this._queueWaited, this.duration );
 				}
-			}
+    }
 
-			/**
-			 * Message waiting finished.
-			 */
-			_queueWaited() {
+    /**
+     * Message waiting finished.
+     */
+    _queueWaited() {
 				// Close message.
 				this._queueClose();
-			}
+    }
 
-			/**
-			 * Close message.
-			 */
-			_queueClose() {
+    /**
+     * Close message.
+     */
+    _queueClose() {
 				// Close the overlay.
 				this.close();
 
 				// Wait for closing animation.
 				this._closingAsync = this.async( this._queueClosed, 200 );
-			}
+    }
 
-			/**
-			 * Message closing finished.
-			 */
-			_queueClosed() {
+    /**
+     * Message closing finished.
+     */
+    _queueClosed() {
 				// Reset snackbar.
 				this.set( 'message', '' );
 				this.set( 'duration', undefined );
@@ -319,18 +310,16 @@ It can be accessed from multiple remotes.
 				this.updateStyles( { '--snackbar-width': undefined } );
 
 				if( this.queue.length != 0 ) {
-					// Open the next message in queue.
-					this._queueOpen();
+            // Open the next message in queue.
+            this._queueOpen();
 				} else {
-					this.set( '_running', false );
+            this.set( '_running', false );
 				}
-			}
+    }
 
-			_notifyTap( e ) {
+    _notifyTap( e ) {
 				this.action.handler( e );
-			}
-		}
+    }
+}
 
-		window.customElements.define( IswSnackbar.is, IswSnackbar );
-	</script>
-</dom-module>
+window.customElements.define( IswSnackbar.is, IswSnackbar );

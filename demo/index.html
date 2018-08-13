@@ -6,23 +6,23 @@
 
 	<title>isw-snackbar demo</title>
 
-	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+	<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 
-	<link rel="import" href="../../app-layout/app-layout.html">
+	<script type="module" src="../../@polymer/app-layout/app-layout.js"></script>
 
-	<link rel="import" href="../../iron-icons/iron-icons.html">
-	<link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
+	<script type="module" src="../../@polymer/iron-icons/iron-icons.js"></script>
+	<script type="module" src="../../@polymer/iron-flex-layout/iron-flex-layout.js"></script>
 
-	<link rel="import" href="../../paper-button/paper-button.html">
-	<link rel="import" href="../../paper-icon-button/paper-icon-button.html">
-	<link rel="import" href="../../paper-styles/paper-styles.html">
+	<script type="module" src="../../@polymer/paper-button/paper-button.js"></script>
+	<script type="module" src="../../@polymer/paper-icon-button/paper-icon-button.js"></script>
+	<script type="module" src="../../@polymer/paper-styles/paper-styles.js"></script>
 
-	<link rel="import" href="../../isw-footer-button-area/isw-footer-button-area.html">
-	<link rel="import" href="../../isw-responsive-behavior/isw-responsive-behavior.html">
-	<link rel="import" href="../../isw-toolbar/isw-toolbar.html">
+	<!-- <script type="module" src="../../isw-footer-button-area/isw-footer-button-area.js"></script>
+	<script type="module" src="../../isw-responsive-behavior/isw-responsive-behavior.js"></script>
+	<script type="module" src="../../isw-toolbar/isw-toolbar.js"></script> -->
 
-	<link rel="import" href="../isw-snackbar.html">
-	<link rel="import" href="../isw-snackbar-remote.html">
+	<script type="module" src="../isw-snackbar.js"></script>
+	<script type="module" src="../isw-snackbar-remote.js"></script>
 </head>
 
 <body>
@@ -130,72 +130,83 @@
 
 	</template>
 
-	<script>
-		HTMLImports.whenReady( function() {
-			class DemoElementView extends Polymer.mixinBehaviors( [ iswResponsiveBehavior ], Polymer.Element ) {
-				static get is() {
-					return 'demo-element-view';
-				}
+	<script type="module">
+import '@polymer/app-layout/app-layout.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/paper-styles/paper-styles.js';
+// import 'isw-footer-button-area/isw-footer-button-area.js';
+// import 'isw-responsive-behavior/isw-responsive-behavior.js';
+// import 'isw-toolbar/isw-toolbar.js';
+import '../isw-snackbar.js';
+import '../isw-snackbar-remote.js';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
+import { PolymerElement } from '@polymer/polymer/polymer-element.js';
+class DemoElementView extends PolymerElement {
+    static get is() {
+        return 'demo-element-view';
+    }
 
-				static get properties() {
-					return {
+    static get properties() {
+        return {
 						drawerForceNarrow: {
-							type: Boolean,
-							notify: true,
-							reflectToAttribute: true
+                type: Boolean,
+                notify: true,
+                reflectToAttribute: true
 						}
-					}
-				}
+        }
+    }
 
-				onResize() {
-					super.onResize();
+    onResize() {
+        super.onResize();
 
-					switch( this.device ) {
+        switch( this.device ) {
 						case 'desktop':
-							this.set( 'drawerForceNarrow', false );
-							break;
+                this.set( 'drawerForceNarrow', false );
+                break;
 
 						case 'tablet':
-							this.set( 'drawerForceNarrow', this.orientation == 'portrait' );
-							break;
+                this.set( 'drawerForceNarrow', this.orientation == 'portrait' );
+                break;
 
 						default:
-							this.set( 'drawerForceNarrow', true );
-					}
-				}
+                this.set( 'drawerForceNarrow', true );
+        }
+    }
 
-				_close() {
-					this.$.snackbar.queueClose();
-				}
+    _close() {
+        this.$.snackbar.queueClose();
+    }
 
-				_snackbarA() {
-					this.$.snackbarA.open();
-				}
+    _snackbarA() {
+        this.$.snackbarA.open();
+    }
 
-				_snackbarB() {
-					this.$.snackbarB.open();
-				}
+    _snackbarB() {
+        this.$.snackbarB.open();
+    }
 
-				_snackbarTwoLine() {
-					this.$.snackbarTwoLine.open();
-				}
+    _snackbarTwoLine() {
+        this.$.snackbarTwoLine.open();
+    }
 
-				_snackbarDuration() {
-					this.$.snackbarDuration.open();
-				}
+    _snackbarDuration() {
+        this.$.snackbarDuration.open();
+    }
 
-				_snackbarAction() {
-					this.$.snackbarAction.open();
-				}
+    _snackbarAction() {
+        this.$.snackbarAction.open();
+    }
 
-				_saidHello(e) {
-					console.info('Said hello!', e);
-				}
+    _saidHello(e) {
+        console.info('Said hello!', e);
+    }
 
-			}
-			window.customElements.define( DemoElementView.is, DemoElementView );
-		} );
-	</script>
+}
+window.customElements.define( DemoElementView.is, DemoElementView );
+</script>
 </dom-module>
 
 <demo-element-view></demo-element-view>
